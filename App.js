@@ -6,10 +6,13 @@ import {
 } from 'react-native';
 
 //npms
+//*StackNavigator
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+//*Firebase
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 //configs for Firebase
 const firebaseConfig = {
@@ -46,7 +49,9 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, user => {
       if (!user) {
         this.setState({
           loggedIn: false,

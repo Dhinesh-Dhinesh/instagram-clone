@@ -8,8 +8,9 @@ import {
 
 //npms
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth'; // OR -> require('firebase/compat/auth');
 import 'firebase/compat/firestore';
+
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export class Register extends Component {
 
@@ -26,10 +27,11 @@ export class Register extends Component {
     }
 
     onSignUp() {
+        const auth = getAuth();
         const {email, password, name} = this.state;
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
         .then((result) => {
-            firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+            firebase.firestore().collection('users').doc(auth.currentUser.uid).set({
                 name : name,
                 email : email,
             });
@@ -42,6 +44,7 @@ export class Register extends Component {
     render() {
         return (
             <View>
+                <Text>Register</Text>
                 <TextInput
                     placeholder="Name"
                     onChangeText={(name) => this.setState({name:name})}
