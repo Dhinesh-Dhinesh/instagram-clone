@@ -14,7 +14,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import firebase from 'firebase/compat/app';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-//configs for Firebase
+//*Redux
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers/index';
+import thunk from 'redux-thunk';
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
+//*configs for Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDh5kkIaAiv7vuF_ObexhSQEqOBGz6Kndc",
   authDomain: "fame-113df.firebaseapp.com",
@@ -29,15 +37,17 @@ if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
 }
 
-//screens
+//*screens
 import LandingScreen from './components/auth/landing';
 import Register from './components/auth/register';
 import Login from './components/auth/login';
+import MainScreen from './components/main';
+import Add from './components/main/add';
 
-//stack
+//*stack
 const Stack = createStackNavigator();
 
-//app
+//!app
 export default class App extends Component {
 
   constructor(props) {
@@ -91,9 +101,14 @@ export default class App extends Component {
     }
 
     return (
-      <View>
-        <Text>User is logged In</Text>
-      </View>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator inititalRouteName="Landing">
+            <Stack.Screen options={{ headerShown: false }} name="Main" component={MainScreen} />
+            <Stack.Screen name="Add" component={Add} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>  
     );
   }
 }
