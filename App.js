@@ -11,8 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 //*Firebase
-import firebase from 'firebase/compat/app';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import  firebase from 'firebase'
 
 //*Redux
 import { Provider } from 'react-redux';
@@ -33,8 +32,8 @@ const firebaseConfig = {
   measurementId: "G-CNTDSKX8WC"
 };
 
-if(!firebase.apps.length){
-  firebase.initializeApp(firebaseConfig);
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig)
 }
 
 //*screens
@@ -43,6 +42,7 @@ import Register from './components/auth/register';
 import Login from './components/auth/login';
 import MainScreen from './components/main';
 import Add from './components/main/add';
+import Save from './components/main/save';
 
 //*stack
 const Stack = createStackNavigator();
@@ -60,20 +60,19 @@ export default class App extends Component {
 
   componentDidMount() {
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, user => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         this.setState({
           loggedIn: false,
           loaded: true,
-        });
+        })
       } else {
         this.setState({
           loggedIn: true,
           loaded: true,
-        });
+        })
       }
-    });
+    })
   }
 
   render() {
@@ -105,7 +104,8 @@ export default class App extends Component {
         <NavigationContainer>
           <Stack.Navigator inititalRouteName="Landing">
             <Stack.Screen options={{ headerShown: false }} name="Main" component={MainScreen} />
-            <Stack.Screen name="Add" component={Add} />
+            <Stack.Screen name="Add" component={Add} navigation={this.props.navigation}/>
+            <Stack.Screen name="Save" component={Save} navigation={this.props.navigation}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>  

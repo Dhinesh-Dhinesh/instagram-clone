@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 
 //npms
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth'; // OR -> require('firebase/compat/auth');
+import firebase from 'firebase'
 
 export class Login extends Component {
 
@@ -25,7 +24,7 @@ export class Login extends Component {
     }
 
     onSignIn() {
-        const {email, password, name} = this.state;
+        const {email, password} = this.state;
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((result) => console.log(result))
         .catch((err) => console.log(err));

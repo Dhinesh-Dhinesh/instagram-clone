@@ -6,11 +6,10 @@ import {
     TextInput,
 } from 'react-native';
 
-//npms
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
+//*Firebase
+import firebase from 'firebase'
+import "firebase/firestore";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export class Register extends Component {
 
@@ -27,18 +26,20 @@ export class Register extends Component {
     }
 
     onSignUp() {
-        const auth = getAuth();
-        const {email, password, name} = this.state;
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((result) => {
-            firebase.firestore().collection('users').doc(auth.currentUser.uid).set({
-                name : name,
-                email : email,
-            });
-        
-            console.log(result)
-        })
-        .catch((err) => console.log(err));
+        const { email, password, name } = this.state;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((result) => {
+                firebase.firestore().collection("users")
+                    .doc(firebase.auth().currentUser.uid)
+                    .set({
+                        name: name,
+                        email: email
+                    })
+                console.log(result)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     render() {
